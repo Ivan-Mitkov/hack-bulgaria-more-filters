@@ -1,10 +1,11 @@
 import axios from "axios";
 
 export const setData = data => {
+  console.log('setData:',data)
   return {
     type: "SET_DATA",
     payload: (data = {
-      company: data.company,
+      company: data,
       companyType: data.companyType
     })
   };
@@ -29,11 +30,11 @@ export const searchResult = data => {
 export const fetchInitialData = () => {
   return dispatch => {
     axios
-      .get("https://my-json-server.typicode.com/HackSoftware/companies.db/db")
+      .get('http://localhost:3000/db')
       .then(response => {
-        // console.log("Axios response.data: ", response.data);
+        console.log("Axios response.data: ", response.data.company);
         // this.setState({ data: response.data }, this.createOptionsForSelect);
-        dispatch(setData(response.data));
+        dispatch(setData(response.data.company));
         return response;
       })
       .then(response => {
@@ -51,7 +52,7 @@ export const fetchInitialData = () => {
 
 export const fetchSearchData = searched => {
   return dispatch => {
-    let baseUrl = `https://my-json-server.typicode.com/HackSoftware/companies.db/company?q=`;
+    let baseUrl = `http://localhost:3000/company?q=`;
     baseUrl += searched;
     axios
       .get(baseUrl)
