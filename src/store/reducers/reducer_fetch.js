@@ -1,10 +1,15 @@
+
+
 const initialState = {
+
   data: {
     company: [],
     companyType: []
   },
   options: [],
-  searched: null
+  sortOptions:[],
+  searched: null,
+  sortResult:null
 };
 
 const fetchReducer = (state = initialState, action) => {
@@ -25,7 +30,7 @@ const fetchReducer = (state = initialState, action) => {
         options: action.payload
       };
     case "SEARCH_RESULTS":
-      console.log("Reducer: ", action.payload);
+      // console.log("Reducer search: ", action.payload);
       return {
         ...state,
         searched: action.payload
@@ -34,6 +39,18 @@ const fetchReducer = (state = initialState, action) => {
       return {
         ...state,
         searched: null
+      };
+    case "SORT_OPTIONS":
+    // console.log("Reducer sort: ", action.payload);
+      return{
+        ...state,
+        sortOptions:action.payload
+      };
+      case "SORT_RESULT":
+    console.log("Reducer sort: ", action.payload);
+      return{
+        ...state,
+        sortResult:action.payload
       };
     default:
       return state;

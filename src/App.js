@@ -3,11 +3,12 @@ import "./App.css";
 import { connect } from "react-redux";
 import Filters from "./components/filters/Filters/Filters";
 import Grid from "./components/grid/grid/Grid";
-import { isChecked, select, input } from "./store/actions/action_filters.js";
+// import { isChecked, select, input } from "./store/actions/action_filters.js";
 import {
   fetchInitialData,
   fetchSearchData,
-  clearSearch
+  clearSearch,
+  // sortBy
 } from "./store/actions/action_fetch.js";
 
 class App extends Component {
@@ -26,6 +27,8 @@ class App extends Component {
     if (this.props.search === "" && prevProps.search !== this.props.search) {
       this.props.clearSearch();
     }
+   
+   
   }
 
   filterData = () => {
@@ -37,7 +40,13 @@ class App extends Component {
       filtered = this.props.searched
         .filter(x => x.type === this.props.companyType)
         .filter(y => y.active === this.props.isActiv);
-    } else if (this.props.data.company) {
+    } 
+    else if (this.props.sortResult) {
+      filtered = this.props.sortResult
+        .filter(x => x.type === this.props.companyType)
+        .filter(y => y.active === this.props.isActiv);
+    } 
+    else if (this.props.data.company) {
       filtered = this.props.data.company
         .filter(x => x.type === this.props.companyType)
         .filter(y => y.active === this.props.isActiv);
@@ -47,14 +56,16 @@ class App extends Component {
   };
 
   render() {
+    console.log('Render:',this.props.sortResult)
     // let companyType = this.props.options;
     let filteredArr = this.filterData();
     let grid = null;
-    if (!this.props.search && !this.props.initFilter) {
+    if (!this.props.search && !this.props.initFilter&&!this.props.sortResult) {
       grid = <Grid data={this.props.data.company} />;
+    }
+    else if(this.props.sortResult&&this.props.sortResult.length>0&&!this.props.initFilter) {
+      grid = <Grid data={this.props.sortResult} />;
     } else if (filteredArr.length > 0) {
-      grid = <Grid data={filteredArr} />;
-    } else {
       grid = <Grid data={filteredArr} />;
     }
     return (
@@ -68,7 +79,7 @@ class App extends Component {
   }
 }
 const mapStateToProps = state => {
-  console.log("State to props:", state.fetch);
+  // console.log("State to props:", state.fetch);
   return {
     isActiv: state.filter.isActiv,
     initFilter: state.filter.initFilter,
@@ -79,19 +90,19 @@ const mapStateToProps = state => {
       companyType: state.fetch.data.companyType
     },
     options: state.fetch.options,
-    searched: state.fetch.searched
+    searched: state.fetch.searched,
+    sortResult:state.fetch.sortResult
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     //pass and execute action creators
-    handleIsChecked: () => dispatch(isChecked()),
-    handleSelectChange: event => dispatch(select(event)),
-    handleInputChange: event => dispatch(input(event)),
     fetchInitialData: () => dispatch(fetchInitialData()),
     fetchSearchData: s => dispatch(fetchSearchData(s)),
-    clearSearch: () => dispatch(clearSearch())
+    clearSearch: () => dispatch(clearSearch()),
+   
+    // handleSort:event=>dispatch(sortBy(event))
   };
 };
 

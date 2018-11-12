@@ -7,12 +7,24 @@ import Select from "../Select/Select";
 import RadioButton from "../RadioButton/RadioButton";
 
 import { isChecked, select, input } from "../../../store/actions/action_filters";
-import { fetchInitialData,fetchSearchData,clearSearch } from "../../../store/actions/action_fetch.js";
+import { sortBy } from "../../../store/actions/action_fetch.js";
 
 class Filters extends React.Component {
+  
+  
   render(){
+    
     return (
       <div className={classes.pos}>
+      <div className={classes.selectWithText}>
+       <div className={classes.label}> Sort by:</div> 
+      <Select
+          options={this.props.sortOptions}
+          // selectValue={this.props.selectValue}
+          handleSelectChange={this.props.handleSort}
+        />
+      </div>
+       
         <Searchbar
           handleInputChange={this.props.handleInputChange}
           search={this.props.search}
@@ -20,20 +32,21 @@ class Filters extends React.Component {
         />
         <Select
           options={this.props.options}
-          selectValue={this.props.selectValue}
+          // selectValue={this.props.selectValue}
           handleSelectChange={this.props.handleSelectChange}
         />
         <RadioButton
           handleIsChecked={this.props.handleIsChecked}
           checked={this.props.checked}
         />
+        
       </div>
     );
   }
   
 };
 const mapStateToProps = state => {
-  console.log("State to props:", state.fetch);
+  // console.log("State to props:", state.fetch);
   return {
     isActiv: state.filter.isActiv,
     initFilter: state.filter.initFilter,
@@ -45,7 +58,8 @@ const mapStateToProps = state => {
     },
     options:state.fetch.options,
     searched:state.fetch.searched,
-    checked:state.filter.isActiv
+    checked:state.filter.isActiv,
+    sortOptions:state.fetch.sortOptions
   };
 };
 
@@ -55,10 +69,11 @@ const mapDispatchToProps = dispatch => {
     handleIsChecked: () => dispatch(isChecked()),
     handleSelectChange: event => dispatch(select(event)),
     handleInputChange: event => dispatch(input(event)),
-    fetchInitialData: () => dispatch(fetchInitialData()),
-    fetchSearchData:(s)=>dispatch(fetchSearchData(s)),
-    clearSearch:()=>dispatch(clearSearch())
+    // fetchInitialData: () => dispatch(fetchInitialData()),
+    // fetchSearchData:(s)=>dispatch(fetchSearchData(s)),
+    // clearSearch:()=>dispatch(clearSearch()),
     
+    handleSort:event=>dispatch(sortBy(event))
   };
 };
 

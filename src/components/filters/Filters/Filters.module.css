@@ -15,6 +15,14 @@
     margin: 1rem;
     color: rgb(11, 0, 48);
 }
+.selectWithText{
+    display:flex;
+    flex-flow: row;
+}
+.selectWithText .label{
+   margin-right: 20px;
+}
+
 
 @media(max-width:900px){
     .pos{
