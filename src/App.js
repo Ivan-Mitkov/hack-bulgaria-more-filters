@@ -4,18 +4,19 @@ import { connect } from "react-redux";
 import Filters from "./components/filters/Filters/Filters";
 import Grid from "./components/grid/grid/Grid";
 import { isChecked, select, input } from "./store/actions/action_filters.js";
-import { fetchInitialData,fetchSearchData,clearSearch } from "./store/actions/action_fetch.js";
+import {
+  fetchInitialData,
+  fetchSearchData,
+  clearSearch
+} from "./store/actions/action_fetch.js";
 
 class App extends Component {
-  
   componentDidMount() {
-   
     this.props.fetchInitialData();
-    
   }
   componentDidUpdate(prevProps, prevState) {
     console.log("CDU", this.props);
-   
+
     if (
       (this.props.search && !prevProps.search) ||
       prevProps.search !== this.props.search
@@ -29,11 +30,10 @@ class App extends Component {
 
   filterData = () => {
     let filtered = [];
-    
+
     if (!this.props.initFilter && this.props.searched && this.props.search) {
       filtered = this.props.searched;
     } else if (this.props.searched) {
-      
       filtered = this.props.searched
         .filter(x => x.type === this.props.companyType)
         .filter(y => y.active === this.props.isActiv);
@@ -42,14 +42,13 @@ class App extends Component {
         .filter(x => x.type === this.props.companyType)
         .filter(y => y.active === this.props.isActiv);
     }
-   
+
     return filtered;
   };
-  
 
-  render() {   
-    let companyType = this.props.options;   
-    let filteredArr = this.filterData();   
+  render() {
+    // let companyType = this.props.options;
+    let filteredArr = this.filterData();
     let grid = null;
     if (!this.props.search && !this.props.initFilter) {
       grid = <Grid data={this.props.data.company} />;
@@ -61,16 +60,7 @@ class App extends Component {
     return (
       <div className="App">
         <div>
-          <Filters
-            handleIsChecked={this.props.handleIsChecked}
-            options={companyType}
-            handleSelectChange={this.props.handleSelectChange}
-            selectValue={this.props.companyType}
-            checked={this.props.isActiv}
-            handleInputChange={this.props.handleInputChange}
-            search={this.props.search}
-            searchedWord={this.props.search || ""}
-          />
+          <Filters />
         </div>
         <div>{grid}</div>
       </div>
@@ -86,10 +76,10 @@ const mapStateToProps = state => {
     search: state.filter.search,
     data: {
       company: state.fetch.data.company,
-      companyType:state.fetch.data.companyType
+      companyType: state.fetch.data.companyType
     },
-    options:state.fetch.options,
-    searched:state.fetch.searched
+    options: state.fetch.options,
+    searched: state.fetch.searched
   };
 };
 
@@ -100,9 +90,8 @@ const mapDispatchToProps = dispatch => {
     handleSelectChange: event => dispatch(select(event)),
     handleInputChange: event => dispatch(input(event)),
     fetchInitialData: () => dispatch(fetchInitialData()),
-    fetchSearchData:(s)=>dispatch(fetchSearchData(s)),
-    clearSearch:()=>dispatch(clearSearch())
-    
+    fetchSearchData: s => dispatch(fetchSearchData(s)),
+    clearSearch: () => dispatch(clearSearch())
   };
 };
 
